@@ -10,6 +10,14 @@ import org.openqa.selenium.Keys;
 
 public class GoogleStepDefinitions {
 
+    @Then("User should see in the title")
+    public void user_should_see_in_the_title() {
+      String actual =Driver.getDriver().getTitle();
+      String expected = "Google";
+      Assert.assertTrue(actual.equals(expected));
+    }
+
+
     @Given("User is on Google home page")
     public void user_is_on_google_home_page() {
         Driver.getDriver().get("https://www.google.com");
@@ -28,6 +36,24 @@ public class GoogleStepDefinitions {
      String expectedInTitle = "apple";
 
         Assert.assertTrue(actualTitle.contains(expectedInTitle));
+        Driver.closeDriver();
     }
 
+    // for Orange
+    @When("User searches for {string}")
+    public void userSearchesFor(String string) {
+        GoogleSearchPage googleSearchPage= new GoogleSearchPage();
+        googleSearchPage.searchBar.sendKeys(string+ Keys.ENTER);
+    }
+
+
+    // for Orange
+    @Then("User should see {string} in the title")
+    public void userShouldSeeInTheTitle(String string) {
+        String actualTitle=Driver.getDriver().getTitle();
+        String expectedInTitle = string;
+
+        Assert.assertTrue(actualTitle.contains(expectedInTitle));
+        Driver.closeDriver();
+    }
 }
