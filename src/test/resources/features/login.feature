@@ -5,12 +5,15 @@ Feature: Library app login feature
 
   Background:  User is already in login page
     Given user is on login page
+
+    # Backround works by order
     # once we used Background will applied for all
     # if the step is repeated
 
 @librarian @employee
   Scenario: Login as librarian
     # Given user is on login page
+
     When user enters librarian username
     And user enter librarian password
     Then user should see dashboard
@@ -22,7 +25,7 @@ Feature: Library app login feature
   And user enters student password
   Then user should see dashboard
 
-@admin @employee
+@admin @employee @db
   Scenario: Login as admin
     #Given user is on login page
     When user enters admin username

@@ -1,3 +1,4 @@
+@wip
 Feature: Google search functionality
   Agile story: As a user, when im on the google search page,
   I should be able whatever
@@ -15,8 +16,19 @@ Feature: Google search functionality
     When  User searches for apple
     Then User should see apple in the title
 
-    @orange
+  @orange
   Scenario: User search for title verificaion
     Given User is on Google home page
     When User searches for "orange"
     Then User should see "orange" in the title
+
+
+    @googleDtaTable
+  Scenario: Google home pae footter link verification
+    Given User is on Google home page
+    Then User should see following links
+      | Advertising      |
+      | Business         |
+      | How Search Works |
+      | Privacy          |
+      | Terms            |

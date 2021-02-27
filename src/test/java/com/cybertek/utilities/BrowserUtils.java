@@ -1,9 +1,14 @@
 package com.cybertek.utilities;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BrowserUtils {
 
@@ -39,5 +44,57 @@ public class BrowserUtils {
     public static WebElement waitForVisibility(WebElement element, int timeWaitsInSec){
         WebDriverWait wait = new WebDriverWait(Driver.getDriver(),timeWaitsInSec);
         return wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    //SCREENSHOT METHOD
+   //  The top line goes into your test, the other part is a seperate method-->
+    //  and to be able call that metho create obj -->  takeSnapShot(driver, "D:\\Users\\User\\Pictures\\ss.png");
+
+public static void takeSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {
+
+        //Convert web driver object to TakeScreenshot
+
+        TakesScreenshot scrShot = ((TakesScreenshot) webdriver);
+
+        //Call getScreenshotAs method to create image file
+
+        File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);//driver is the source
+
+        //Move image file to new destination
+
+        File DestFile = new File(fileWithPath);
+
+        //Copy file at destination
+
+        FileUtils.copyFile(SrcFile, DestFile);
+
+        }
+
+
+
+        // method to assert the title of Browsers for each time
+    public static void titleVerification(String expectedTitle){
+
+        String actualTitle=Driver.getDriver().getTitle();
+        Assert.assertTrue(actualTitle.equals(expectedTitle));
+
+    }
+
+    /*
+    This method
+    Accepts List <Webelement> and return List<String>
+     */
+    public static List<String> getElemenetsTxt(List<WebElement> webElementList){
+
+        // placeholder for empty List of webelements
+        List<String> webElementsAsString = new ArrayList<>();
+
+        // looping through webelemenets and storing text into placeholder list
+        for (WebElement each: webElementList){
+            webElementsAsString.add(each.getText());
+        }
+        // returning final List<String>
+    return webElementsAsString;
+
     }
 }

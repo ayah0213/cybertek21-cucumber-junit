@@ -11,39 +11,42 @@ public class Driver {
 
     private Driver(){}
 
-    private static WebDriver driver;
+    private static ThreadLocal<WebDriver> driverPool = new ThreadLocal<>();
 
     public static WebDriver getDriver(){
 
-        if (driver == null){
+        synchronized (Driver.class) {
 
-            String browser = ConfigurationReader.getProperty("browser");
+            if (driverPool.get() == null) {
 
-            switch (browser){
-                case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                    break;
-                default:
-                    WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                    break;
+                String browser = ConfigurationReader.getProperty("browser");
+
+                switch (browser) {
+                    case "firefox":
+                        WebDriverManager.firefoxdriver().setup();
+                        driverPool.set(new FirefoxDriver());
+                        driverPool.get().manage().window().maximize();
+                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                        break;
+                    default:
+                        WebDriverManager.chromedriver().setup();
+                        driverPool.set(new ChromeDriver());
+                        driverPool.get().manage().window().maximize();
+                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                        break;
+                }
             }
         }
 
         //This same driver will be returned every time we call Driver.getDriver() method
-        return driver;
+        return  driverPool.get();
 
     }
 
     public static void closeDriver(){
-        if (driver != null){
-            driver.quit();
-            driver = null;
+        if ( driverPool.get() != null){
+            driverPool.get().quit();
+            driverPool.remove();
         }
     }
 
